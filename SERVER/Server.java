@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.concurrent.ConcurrentHashMap;
 import CLIENT.MySocket;
-
 public class Server {
 
     public static void main(String[] args) {
@@ -46,7 +45,7 @@ public class Server {
                     if (outputString.equals(null)) {
                         break;
                     }
-                    System.out.println("Server:  " + outputString);
+                    System.out.println("Rebut de " + outputString);
                     broadcast(outputString);
                 }
             } catch (Exception e) {
@@ -58,7 +57,7 @@ public class Server {
         private void broadcast(String outputString) {
              clientList.forEach((name, value) -> {
                 System.out.println("enviar a: " + name);  //així també sabem els clients connectats
-                value.getOutput().println(outputString);
+                value.getOutput().println("Server: " + outputString);
             });
         }
     }

@@ -3,33 +3,24 @@ package CLIENT;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Client{
+public class Client {
     public static void main(String[] args) {
         try (MySocket socket = new MySocket(args[0], Integer.parseInt(args[1]))) {
-            
+
             Scanner scanner = new Scanner(System.in);
             String userInput;
-            String clientName = "";
             Client.clientThread clientThread = new Client().new clientThread(socket);
             clientThread.start();
+            System.out.println("Nickname: ");
+            userInput = scanner.nextLine();
+            String clientName = userInput;
+            socket.output.println(userInput);
 
             do {
-                if (clientName.equals("")) {
-                    System.out.println("Nickname: ");
-                    userInput = scanner.nextLine();
-                    clientName = userInput;
-                    socket.output.println(userInput);
-                    if (userInput.equals("exit")) {
-                        break;
-                    }
-                } else {
-                    String message = clientName + ": " + " message : ";
-                    System.out.println(message);
-                    userInput = scanner.nextLine();
-                    socket.output.println(message + " " + userInput);
-                    if (userInput.equals("exit")) {
-                        break;
-                    }
+                userInput = scanner.nextLine();
+                socket.output.println(clientName + ":   message : " + userInput);
+                if (userInput.equals("exit")) {
+                    break;
                 }
             } while (!userInput.equals("exit"));
         } catch (Exception e) {
@@ -40,7 +31,7 @@ public class Client{
     public class clientThread extends Thread {
         private MySocket socket;
 
-        public clientThread(MySocket s){
+        public clientThread(MySocket s) {
             this.socket = s;
         }
 
