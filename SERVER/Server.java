@@ -2,22 +2,21 @@ package SERVER;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 import CLIENT.MySocket;
 
-public class Main {
+public class Server {
 
     public static void main(String[] args) {
         ConcurrentHashMap<String, MySocket> clientList = new ConcurrentHashMap<>();
-        try (MyServerSocket myserversocket = new MyServerSocket(5000)) {
+        try (MyServerSocket myserversocket = new MyServerSocket(Integer.parseInt(args[0]))) {    
 
             while (true) {
                 MySocket socket = myserversocket.accept();
-                serverThread serverThread = new Main().new serverThread(socket, clientList);
+                serverThread serverThread = new Server().new serverThread(socket, clientList);
                 serverThread.start();            }
         } catch (Exception e) {
-            System.out.println("Error occured in main: " + e.getStackTrace());
+            System.out.println("Error al main: " + e.getStackTrace());
         }
     }
 
@@ -38,17 +37,16 @@ public class Main {
                 PrintWriter output = mysocket.getOutput();
                 //this.output = new PrintWriter(mysocket.getSocket().getOutputStream(), true);
                 String clientName = input.readLine();
-                System.out.println("Nick received " + clientName);
+                System.out.println("    - Nick rebut " + clientName);
                 clientList.put(clientName, mysocket);
 
                 // inifite loop for server
                 while (true) {
                     String outputString = input.readLine();
-                    // if user types exit command
-                    if (outputString.equals("exit")) {
+                    if (outputString.equals(null)) {
                         break;
                     }
-                    System.out.println("Server received " + outputString);
+                    System.out.println("Server:  " + outputString);
                     broadcast(outputString);
                 }
             } catch (Exception e) {
@@ -59,7 +57,7 @@ public class Main {
 
         private void broadcast(String outputString) {
              clientList.forEach((name, value) -> {
-                System.out.println("Sending message to " + name);
+                System.out.println("enviar a: " + name);  //així també sabem els clients connectats
                 value.getOutput().println(outputString);
             });
         }

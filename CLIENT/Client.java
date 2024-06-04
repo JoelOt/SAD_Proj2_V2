@@ -3,18 +3,18 @@ package CLIENT;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Main {
+public class Client{
     public static void main(String[] args) {
-        try (MySocket socket = new MySocket("localhost", 5000)) {
+        try (MySocket socket = new MySocket(args[0], Integer.parseInt(args[1]))) {
             
             Scanner scanner = new Scanner(System.in);
             String userInput;
-            String clientName = "empty";
-            Main.clientThread clientThread = new Main().new clientThread(socket);
+            String clientName = "";
+            Client.clientThread clientThread = new Client().new clientThread(socket);
             clientThread.start();
 
             do {
-                if (clientName.equals("empty")) {
+                if (clientName.equals("")) {
                     System.out.println("Nickname: ");
                     userInput = scanner.nextLine();
                     clientName = userInput;
